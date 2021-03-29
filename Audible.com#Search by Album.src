@@ -7,12 +7,11 @@
 # 2020-04-06: Updated to Audible.com
 # 2020-06-28: Updated to region independent (u/Carlyone)
 # 2020-08-05: Updated
+# 2021-03-29: Updated Audible site changes (u/HughT) - mp3Tag Parser Commands: https://help.mp3tag.de/main_online.html
 #
 # This file should be in your sources dir. %appdata%\roaming\mp3tag\data\sources
 # On Windows XP it's C:\Documents and Settings\*username*\Application Data\Mp3tag\data\sources
 #
-#
-
 
 [Name]=Audible.com
 [BasedOn]=www.audible.com
@@ -28,8 +27,8 @@
 # ###################################################################
 #					I  N  D  E  X
 # ###################################################################
-#DebugWriteInput #"C:\Users\%user%\Desktop\mp3tag.html"
-#Debug "ON" #"C:\Users\%user%\Desktop\mp3tagdebug.txt"
+#DebugWriteInput "debug-index-input.out"
+#Debug "ON" "debug-index.out"
 
 joinuntil "</html>"
 regexpreplace "[\r\n]+" ""
@@ -106,6 +105,9 @@ while "bc-color-link" 99
 # ###################################################################
 #					A  L  B  U  M
 # ###################################################################
+# Remove comments from below line to output debug files to %AppData%\Roaming\Mp3tag
+#DebugWriteInput "debug-album-input.out"
+#Debug "ON" "debug-album.out"
 
 # Cover
 outputto "Coverurl"
@@ -165,22 +167,22 @@ endif
 outputto "Albumartist"
 findline "authorLabel"
 moveline 1 1
-joinuntil "</span>"
+joinuntil "</li>"
 regexpreplace "</?[^><]+>" ""
 unspace
 regexpreplace "  +" " "
-regexpreplace ".+By:" ""
+regexpreplace "By:" ""
 sayrest
 
 # narratorLabel
 outputto "Composer"
 findline "narratorLabel"
 moveline 1 1
-joinuntil "</span>"
+joinuntil "</li>"
 regexpreplace "</?[^><]+>" ""
 unspace
 regexpreplace "  +" " "
-regexpreplace ".+Narrated by:" ""
+regexpreplace "Narrated by:" ""
 sayrest
 
 # Grouping / Series
